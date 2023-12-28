@@ -36,6 +36,21 @@ const importData=async () => {
         console.log('Data imported!'.green.inverse);
         process.exit();
     } catch (error) {
-        console.error(`Error: ${error.messages}`)
+        console.log(`Error: ${error.messages}`.red.inverse);
+        process.exit(1);
+    }
+}
+
+const destroyData=async () => {
+    try {
+        await Order.deleteMany();
+        await Product.deleteMany();
+        await User.deleteMany();
+
+        console.log('Data deleted!'.red.inverse);
+        process.exit();
+    } catch (error) {
+        console.log(`Error: ${error.messages}`.red.inverse);
+        process.exit(1);
     }
 }
