@@ -1,20 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap'
-
-import products from '../products'
+import axios from 'axios';
 import Rating from '../components/Rating'
 
 
 
 const ProductScreen=() => {
     const { id: productId }=useParams();
-    const product = products.find((p) => p._id===productId);
+    const [product, setProduct]=useState({});
+    useEffect(() => {
+        axios.get(`http://localhost:5000/api/products/${productId}`)
+            .then((response) => {
+                setProduct(response.data);
+            });
+    },[])
   return (
       <>
-          <Link className='btn btn-light my-3' to="/">
-              Go Back
-          </Link>
           <Row>
               <Col md={5}>
                   <Image src={product.image} alt = {product.name} fluid />
@@ -73,6 +75,10 @@ const ProductScreen=() => {
                   </Card>
               </Col>
           </Row>
+
+          <Link className='btn btn-success my-3 text-white' to="/">
+              Go Back
+          </Link>
 
       </>
   )
