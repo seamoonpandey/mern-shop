@@ -1,12 +1,20 @@
 import express from "express";
+import cors from "cors";
 import dotenv from 'dotenv';
 dotenv.config();
+
+import connectDb from './config/db.js';
+
 import products from "./data/products.js";
 
 
 const port= process.env.PORT || 5000;
 
+connectDb();
+
 const app=express();
+app.use(cors());
+
 
 app.get('/', (req, res) => { 
     res.send("API is runnnig....");
