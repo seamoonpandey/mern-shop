@@ -23,6 +23,9 @@ app.use(cors());
 app.get(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Cookie parser middleware
+app.use(cookieParser());
+
 app.get('/', (req, res) => { 
     res.send("API is runnnig....");
 });
