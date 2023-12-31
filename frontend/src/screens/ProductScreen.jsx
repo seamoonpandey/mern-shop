@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap'
-import axios from 'axios';
-import Rating from '../components/Rating'
+import Rating from '../components/Rating';
+
+import {  useGetProductDetailsQuery } from '../slices/productsApiSlice';
 
 
 
 const ProductScreen=() => {
     const { id: productId }=useParams();
-    const [product, setProduct]=useState({});
-    useEffect(() => {
-        axios.get(`http://localhost:5000/api/products/${productId}`)
-            .then((response) => {
-                setProduct(response.data);
-            });
-    },[productId])
+
+    const { data: product, isLoading, error }=useGetProductDetailsQuery(productId);
+
   return (
       <>
-          <Row>
+          {
+              isLoading? (<h2>Loading...</h2>):error? (<div>{error?.data?.message||error?.error}</div>):(
+                  <Row>
               <Col md={5}>
                   <Image src={product.image} alt = {product.name} fluid />
               </Col>
@@ -74,7 +73,8 @@ const ProductScreen=() => {
                   </ListGroup>
                   </Card>
               </Col>
-          </Row>
+          </Row>)
+          }
 
           <Link className='btn btn-success my-3 text-white' to="/">
               Go Back
