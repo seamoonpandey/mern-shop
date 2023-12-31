@@ -19,6 +19,9 @@ connectDb();
 const app=express();
 app.use(cors());
 
+// Body parser middleware
+app.get(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => { 
     res.send("API is runnnig....");
