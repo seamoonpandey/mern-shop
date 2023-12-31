@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from 'dotenv';
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 import { notFound, errorHandler } from './middleware/errorHandler.js';
