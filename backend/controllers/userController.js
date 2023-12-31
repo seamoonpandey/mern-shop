@@ -1,6 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from '../models/userModel.js';
-import jwt from 'jsonwebtoken';
+import generateToken from "../utils/generateToken.js";
+
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -11,17 +12,8 @@ const authUser=asyncHandler(async (req, res) => {
     const user=await User.findOne({ email });
     console.log(user);
     if (user&&(await user.matchPassword(password))) {
-        
-        const token=jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
-        // Set JWT as HTTP-Only cookie
-
-        res.cookie('jwt', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV!=='development',
-            sameSite: 'strict',
-            maxAge: 30  * 60 * 24 * 60 *1000, // 30 days
-        });
+        generateToken(res, user._id);
 
         res.json({
             _id: user._id,
@@ -39,6 +31,31 @@ const authUser=asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser=asyncHandler(async (req, res) => {
+    const { name, email, password }=req.body;
+    const userExists=await User.findOne({ email: email });
+
+    if (userExists) {
+        res.status(400);
+        throw new Error('User alredy exists');
+    } else {
+        const user=await User.create({
+            name,
+            email,
+            password
+        });
+        if (user) {
+            generateToken(res, user._id);
+            res.status(201).json({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                isAdmin: user.isAdmin
+            })
+        } else {
+            res.status(404);
+            throw new Error('Invalid email or password');
+        }
+    }
     res.send('register user');
 });
 
@@ -48,13 +65,13 @@ const registerUser=asyncHandler(async (req, res) => {
 
 const logoutUser=asyncHandler(async (req, res) => {
     res.cookie('jwt', '', {
-        options: {
-            httpOnly: true,
-            expires: new Date(0)
-        }
+        httpOnly: true,
+        expires: new Date(0)
     });
-    res.status(200).json({ message: 'Logged out sucessfully' });
+
+    res.status(200).json({ message: 'Logged out successfully' });
 });
+
 
 // @desc    Get user profile
 // @route   GET /api/users/logout
@@ -98,4 +115,4 @@ const updateUser=asyncHandler(async (req, res) => {
     res.send('update profile');
 });
 
-export {authUser, registerUser, getUserById, getUserProfile,getUsers,logoutUser,updateUserProfile,updateUser,deleteUser}
+export { authUser, registerUser, getUserById, getUserProfile, getUsers, logoutUser, updateUserProfile, updateUser, deleteUser }
