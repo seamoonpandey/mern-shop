@@ -5,6 +5,7 @@ import Rating from '../components/Rating';
 
 import {  useGetProductDetailsQuery } from '../slices/productsApiSlice';
 import Loader from '../components/Loader';
+import Message from '../components/Message';
 
 
 
@@ -16,7 +17,9 @@ const ProductScreen=() => {
   return (
       <>
           {
-              isLoading? (<Loader />):error? (<div>{error?.data?.message||error?.error}</div>):(
+              isLoading? (<Loader />):error? (<Message variant='danger'>
+                  {error?.data?.message || error?.error}
+          </Message>):(
                   <Row>
               <Col md={5}>
                   <Image src={product.image} alt = {product.name} fluid />
