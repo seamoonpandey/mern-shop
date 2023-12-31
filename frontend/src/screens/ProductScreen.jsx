@@ -14,7 +14,7 @@ const ProductScreen=() => {
             .then((response) => {
                 setProduct(response.data);
             });
-    },[])
+    },[productId])
   return (
       <>
           <Row>
