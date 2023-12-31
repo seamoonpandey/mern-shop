@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 import { Row, Col, Image, ListGroup, Card, Button, Form } from 'react-bootstrap'
 import Rating from '../components/Rating';
@@ -14,7 +14,6 @@ const ProductScreen=() => {
     const { id: productId }=useParams();
 
     const dispatch=useDispatch();
-    const navigate=useNavigate();
 
     const [qty, setQty]=useState(1);
 
@@ -22,7 +21,6 @@ const ProductScreen=() => {
 
     const addToCartHandler=() => {
         dispatch(addToCart({ ...product, qty }));
-        navigate('/cart');
     }
 
   return (
