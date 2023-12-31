@@ -4,6 +4,7 @@ import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap'
 import Rating from '../components/Rating';
 
 import {  useGetProductDetailsQuery } from '../slices/productsApiSlice';
+import Loader from '../components/Loader';
 
 
 
@@ -15,7 +16,7 @@ const ProductScreen=() => {
   return (
       <>
           {
-              isLoading? (<h2>Loading...</h2>):error? (<div>{error?.data?.message||error?.error}</div>):(
+              isLoading? (<Loader />):error? (<div>{error?.data?.message||error?.error}</div>):(
                   <Row>
               <Col md={5}>
                   <Image src={product.image} alt = {product.name} fluid />
